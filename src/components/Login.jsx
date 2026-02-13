@@ -6,7 +6,7 @@ export default function Login() {
 	return (
 		<div className='min-h-screen page-ambient text-white relative overflow-hidden'>
 			<div className='absolute inset-0'>
-				<div className='absolute -top-32 -left-24 h-72 w-72 rounded-full bg-yellow-400/20 blur-3xl float-slow'></div>
+				<div className='absolute -top-32 -left-24 h-72 w-72 rounded-full bg-gray-400 blur-3xl float-slow'></div>
 				<div className='absolute top-24 right-10 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl float-slow float-delay'></div>
 				<div className='absolute -bottom-32 left-1/3 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl float-slow'></div>
 			</div>
@@ -105,6 +105,12 @@ export default function Login() {
 								<button type='button' className='text-yellow-300 hover:text-yellow-200'>
 									Request an invite
 								</button>
+							</div>
+							<div className='text-center text-xs text-white/60'>
+								<span>New to the platform? </span>
+								<a href='/register' className='text-yellow-300 hover:text-yellow-200'>
+									Create an account
+								</a>
 							</div>
 						</form>
 					</section>
