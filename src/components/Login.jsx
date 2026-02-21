@@ -4,7 +4,7 @@ export default function Login() {
 	const [showPassword, setShowPassword] = useState(false)
 
 	return (
-		<div className='min-h-screen page-ambient text-white relative overflow-hidden'>
+    <div className='min-h-screen lg:h-screen page-ambient text-white relative overflow-x-hidden overflow-y-auto lg:overflow-hidden'>
 			<div className='absolute inset-0'>
 				<div className='absolute -top-32 -left-24 h-72 w-72 rounded-full bg-gray-400 blur-3xl float-slow'></div>
 				<div className='absolute top-24 right-10 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl float-slow float-delay'></div>
