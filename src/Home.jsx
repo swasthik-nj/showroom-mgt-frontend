@@ -1,5 +1,6 @@
 import React from 'react'
 import Nav from './components/Nav'
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   const popularBikes = [
@@ -24,10 +25,32 @@ export default function Home() {
       image:
         'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=900&q=80',
     },
+    
+    {
+      name: 'KTM Duke 200',
+      type: 'Sports Naked',
+      price: '₹1,97,000',
+      image:
+        'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=900&q=80',
+    },
+        {
+      name: 'Yamaha MT-15',
+      type: 'Street Bike',
+      price: '₹1,68,000',
+      image:
+        'https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=80',
+    },
+     {
+      name: 'Royal Enfield Classic 350',
+      type: 'Cruiser',
+      price: '₹1,93,000',
+      image:
+        'https://images.unsplash.com/photo-1580310614729-ccd69652491d?auto=format&fit=crop&w=900&q=80',
+    },
   ]
 
   return (
-    <div className='bg-orange-200 min-h-screen text-gray-800'>
+    <div className='bg-orange-100 min-h-screen text-gray-800'>
       <Nav />
 
       <section
@@ -70,7 +93,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id='collection' className='px-4 sm:px-8 lg:px-16 py-16 bg-orange-200/60'>
+      <section id='collection' className='px-4 sm:px-8 lg:px-16 py-16 bg-orange-200/20'>
         <div className='max-w-6xl mx-auto'>
           <h2 className='text-3xl sm:text-4xl font-bold mb-3'>Popular Bikes</h2>
           <p className='text-gray-700 mb-10'>Top picks our customers are booking this season.</p>
@@ -87,9 +110,12 @@ export default function Home() {
                   <p className='text-gray-600 text-sm mb-3'>{bike.type}</p>
                   <div className='flex items-center justify-between'>
                     <span className='text-red-900 font-bold text-lg'>{bike.price}</span>
-                    <button className='px-4 py-2 bg-red-950 text-white rounded-lg hover:bg-red-800 transition duration-300'>
+                    <Link
+                      to='/bikes/hunter-350'
+                      className='px-4 py-2 bg-red-950 text-white rounded-lg hover:bg-red-800 transition duration-300'
+                    >
                       View Details
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </article>
