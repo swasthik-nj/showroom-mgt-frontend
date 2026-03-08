@@ -1,8 +1,25 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from './components/Nav'
 import { Link } from 'react-router-dom'
 
+const AUTH_USER_KEY = 'authUser'
+
 export default function Home() {
+  const [registeredUser, setRegisteredUser] = useState(null)
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY)
+    if (!storedUser) {
+      return
+    }
+
+    try {
+      setRegisteredUser(JSON.parse(storedUser))
+    } catch {
+      setRegisteredUser(null)
+    }
+  }, [])
+
   const popularBikes = [
     {
       name: 'Yamaha MT-15',
@@ -81,6 +98,25 @@ export default function Home() {
                 About Showroom
               </a>
             </div>
+
+            {/* <div className='mt-8 rounded-2xl border border-red-200 bg-white p-5 shadow-md'>
+              <p className='text-sm font-semibold text-red-900 mb-2'>Registered User</p>
+              {registeredUser ? (
+                <div className='space-y-1 text-sm text-gray-700'>
+                  <p>
+                    <span className='font-semibold'>Name:</span> {registeredUser.username || 'N/A'}
+                  </p>
+                  <p>
+                    <span className='font-semibold'>Email:</span> {registeredUser.email || 'N/A'}
+                  </p>
+                  <p>
+                    <span className='font-semibold'>Phone:</span> {registeredUser.phone || 'N/A'}
+                  </p>
+                </div>
+              ) : (
+                <p className='text-sm text-gray-600'>No registered user data found. Please register or login.</p>
+              )}
+            </div> */}
           </div>
 
           <div className='rounded-3xl overflow-hidden shadow-xl'>

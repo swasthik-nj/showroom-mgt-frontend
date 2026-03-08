@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1'
+const AUTH_USER_KEY = 'authUser'
 
 export default function Register() {
   const navigate = useNavigate()
@@ -47,6 +48,12 @@ export default function Register() {
       const response = await axios.post(`${API_BASE_URL}/auth/register`, payload, {
         withCredentials: true,
       })
+
+      const registeredUser = response?.data?.data?.user
+      if (registeredUser) {
+        localStorage.setItem(AUTH_USER_KEY, JSON.stringify(registeredUser))
+        sessionStorage.removeItem(AUTH_USER_KEY)
+      }
 
       toast.success(response?.data?.message || 'Registration successful')
       setFormData({
