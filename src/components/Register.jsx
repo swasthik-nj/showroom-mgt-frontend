@@ -1,8 +1,75 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { Link, useNavigate } from 'react-router-dom'
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1'
 
 export default function Register() {
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [formData, setFormData] = useState({
+    username: '',
+    phone: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+
+    if (formData.password !== formData.confirmPassword) {
+      toast.error('Password and confirm password must match')
+      return
+    }
+
+    try {
+      setIsSubmitting(true)
+
+      const payload = {
+        username: formData.username.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        phone: formData.phone.trim(),
+      }
+
+      const response = await axios.post(`${API_BASE_URL}/auth/register`, payload, {
+        withCredentials: true,
+      })
+
+      toast.success(response?.data?.message || 'Registration successful')
+      setFormData({
+        username: '',
+        phone: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+      })
+      navigate('/login')
+    } catch (error) {
+      const backendMessage = error?.response?.data?.message
+      if (backendMessage) {
+        toast.error(backendMessage)
+      } else if (error?.response?.status === 409) {
+        toast.error('User with this email or username already exists')
+      } else {
+        toast.error('Registration failed. Please try again')
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className='min-h-screen lg:h-screen page-ambient text-white relative overflow-x-hidden overflow-y-auto lg:overflow-hidden'>
@@ -55,14 +122,17 @@ export default function Register() {
               <p className='text-sm text-white/70'>Create a buyer profile and share your bike requirements.</p>
             </div>
 
-            <form className='mt-8 space-y-5'>
+            <form className='mt-8 space-y-5' onSubmit={handleSubmit}>
               <div className='grid gap-4 sm:grid-cols-2'>
                 <div className='space-y-2'>
                   <label className='text-sm text-white/70'>Full name</label>
                   <input
                     type='text'
+                    name='username'
                     placeholder='Aarav Sharma'
                     required
+                    value={formData.username}
+                    onChange={handleInputChange}
                     className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
                   />
                 </div>
@@ -70,8 +140,11 @@ export default function Register() {
                   <label className='text-sm text-white/70'>Phone</label>
                   <input
                     type='tel'
+                    name='phone'
                     placeholder='+91 9XXXX XXXXX'
                     required
+                    value={formData.phone}
+                    onChange={handleInputChange}
                     className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
                   />
                 </div>
@@ -80,8 +153,11 @@ export default function Register() {
                 <label className='text-sm text-white/70'>Email</label>
                 <input
                   type='email'
+                  name='email'
                   placeholder='you@example.com'
                   required
+                  value={formData.email}
+                  onChange={handleInputChange}
                   className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
                 />
               </div>
@@ -92,8 +168,11 @@ export default function Register() {
                 <div className='relative'>
                   <input
                     type={showPassword ? 'text' : 'password'}
+                    name='password'
                     placeholder='Create a strong password'
                     required
+                    value={formData.password}
+                    onChange={handleInputChange}
                     className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 pr-20 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
                   />
                   <button
@@ -110,8 +189,11 @@ export default function Register() {
                 <div className='relative'>
                   <input
                     type={showConfirm ? 'text' : 'password'}
+                    name='confirmPassword'
                     placeholder='Re-enter password'
                     required
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
                     className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 pr-20 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
                   />
                   <button
@@ -126,17 +208,18 @@ export default function Register() {
 
               <button
                 type='submit'
-                className='group relative w-full overflow-hidden rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-yellow-400/30 transition hover:-translate-y-0.5'
+                disabled={isSubmitting}
+                className='group relative w-full overflow-hidden rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-yellow-400/30 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70'
               >
-                <span className='relative z-10'>Register now</span>
+                <span className='relative z-10'>{isSubmitting ? 'Registering...' : 'Register now'}</span>
                 <span className='absolute inset-0 -translate-x-full bg-linear-to-r from-yellow-200/0 via-white/40 to-yellow-200/0 transition duration-500 group-hover:translate-x-full'></span>
               </button>
 
               <div className='flex flex-col gap-3 text-center text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between'>
                 <span>Already have an account?</span>
-                <a href='/login' className='text-yellow-300 hover:text-yellow-200'>
+                <Link to='/login' className='text-yellow-300 hover:text-yellow-200'>
                   Sign in instead
-                </a>
+                </Link>
               </div>
             </form>
           </section>

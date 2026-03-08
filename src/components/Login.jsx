@@ -1,7 +1,58 @@
 import React, { useState } from 'react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { Link, useNavigate } from 'react-router-dom'
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1'
 
 export default function Login() {
+	const navigate = useNavigate()
 	const [showPassword, setShowPassword] = useState(false)
+	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [formData, setFormData] = useState({
+		email: '',
+		password: '',
+		keepSignedIn: false,
+	})
+
+	const handleInputChange = (event) => {
+		const { name, value, type, checked } = event.target
+		setFormData((prev) => ({
+			...prev,
+			[name]: type === 'checkbox' ? checked : value,
+		}))
+	}
+
+	const handleSubmit = async (event) => {
+		event.preventDefault()
+
+		try {
+			setIsSubmitting(true)
+
+			const payload = {
+				email: formData.email.trim(),
+				password: formData.password,
+			}
+
+			const response = await axios.post(`${API_BASE_URL}/auth/login`, payload, {
+				withCredentials: true,
+			})
+
+			toast.success(response?.data?.message || 'Login successful')
+			navigate('/')
+		} catch (error) {
+			const backendMessage = error?.response?.data?.message
+			if (backendMessage) {
+				toast.error(backendMessage)
+			} else if (error?.response?.status === 400) {
+				toast.error('Invalid email or password')
+			} else {
+				toast.error('Login failed. Please try again')
+			}
+		} finally {
+			setIsSubmitting(false)
+		}
+	}
 
 	return (
     <div className='min-h-screen lg:h-screen page-ambient text-white relative overflow-x-hidden overflow-y-auto lg:overflow-hidden'>
@@ -55,12 +106,16 @@ export default function Login() {
 							<p className='text-sm text-white/70'>Sign in to manage your showroom floor.</p>
 						</div>
 
-						<form className='mt-8 space-y-5'>
+						<form className='mt-8 space-y-5' onSubmit={handleSubmit}>
 							<div className='space-y-2'>
 								<label className='text-sm text-white/70'>Work email</label>
 								<input
 									type='email'
+									name='email'
 									placeholder='manager@bikehouse.com'
+									value={formData.email}
+									onChange={handleInputChange}
+									required
 									className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
 								/>
 							</div>
@@ -69,7 +124,11 @@ export default function Login() {
 								<div className='relative'>
 									<input
 										type={showPassword ? 'text' : 'password'}
+										name='password'
 										placeholder='Enter your password'
+										value={formData.password}
+										onChange={handleInputChange}
+										required
 										className='w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 pr-20 text-sm text-white placeholder:text-white/40 focus:border-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400/30'
 									/>
 									<button
@@ -84,7 +143,13 @@ export default function Login() {
 
 							<div className='flex items-center justify-between text-sm text-white/60'>
 								<label className='flex items-center gap-2'>
-									<input type='checkbox' className='h-4 w-4 rounded border-white/20 bg-white/10' />
+									<input
+										type='checkbox'
+										name='keepSignedIn'
+										checked={formData.keepSignedIn}
+										onChange={handleInputChange}
+										className='h-4 w-4 rounded border-white/20 bg-white/10'
+									/>
 									Keep me signed in
 								</label>
 								<button type='button' className='text-yellow-300 hover:text-yellow-200'>
@@ -94,9 +159,10 @@ export default function Login() {
 
 							<button
 								type='submit'
-								className='group relative w-full overflow-hidden rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-yellow-400/30 transition hover:-translate-y-0.5'
+								disabled={isSubmitting}
+								className='group relative w-full overflow-hidden rounded-xl bg-yellow-400 px-4 py-3 text-sm font-semibold text-slate-900 shadow-lg shadow-yellow-400/30 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70'
 							>
-								<span className='relative z-10'>Sign in</span>
+								<span className='relative z-10'>{isSubmitting ? 'Signing in...' : 'Sign in'}</span>
 								<span className='absolute inset-0 -translate-x-full bg-gradient-to-r from-yellow-200/0 via-white/40 to-yellow-200/0 transition duration-500 group-hover:translate-x-full'></span>
 							</button>
 
@@ -108,9 +174,9 @@ export default function Login() {
 							</div>
 							<div className='text-center text-xs text-white/60'>
 								<span>New to the platform? </span>
-								<a href='/register' className='text-yellow-300 hover:text-yellow-200'>
+								<Link to='/register' className='text-yellow-300 hover:text-yellow-200'>
 									Create an account
-								</a>
+								</Link>
 							</div>
 						</form>
 					</section>
