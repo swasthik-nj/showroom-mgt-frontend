@@ -65,12 +65,12 @@ export default function Nav() {
 
         <div className='hidden lg:flex items-center gap-4'>
           <div className='flex flex-row items-center'>
-            <a href='#' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
+            <Link to='/' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
               Home
-            </a>
-            <a href='#' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
+            </Link>
+            <Link to='/available-bikes' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
               Collection
-            </a>
+            </Link>
             <a href='#' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
               Book
             </a>
@@ -148,20 +148,20 @@ export default function Nav() {
 
           
           <div className='flex flex-col space-y-1 px-4 py-2'>
-            <a
-              href='#'
+            <Link
+              to='/'
               className='text-white hover:text-yellow-400 hover:bg-gray-700 px-4 py-3 rounded-md text-base font-medium transition duration-300'
               onClick={() => setIsOpen(false)}
             >
               Home
-            </a>
-            <a
-              href='#'
+            </Link>
+            <Link
+              to='/available-bikes'
               className='text-white hover:text-yellow-400 hover:bg-gray-700 px-4 py-3 rounded-md text-base font-medium transition duration-300'
               onClick={() => setIsOpen(false)}
             >
               Collection
-            </a>
+            </Link>
             <a
               href='#'
               className='text-white hover:text-yellow-400 hover:bg-gray-700 px-4 py-3 rounded-md text-base font-medium transition duration-300'
