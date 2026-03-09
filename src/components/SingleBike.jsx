@@ -1,20 +1,49 @@
 import React from 'react'
+import { useParams } from 'react-router-dom'
+import { popularBikes } from '../data/data.js'
 
 export default function SingleBike() {
+	const { id } = useParams()
+	const singleBike = popularBikes.find((bike) => String(bike.id) === id)
+
+	if (!singleBike) {
+		return (
+			<div className='flex min-h-screen items-center justify-center bg-[#f5f6f8] p-6'>
+				<div className='rounded-xl border border-gray-200 bg-white px-6 py-5 text-center shadow-sm'>
+					<h2 className='text-xl font-semibold text-gray-800'>Bike not found</h2>
+					<p className='mt-2 text-sm text-gray-600'>This bike details page does not exist.</p>
+					<a
+						href='/'
+						className='mt-4 inline-block rounded-lg border border-red-900 px-4 py-2 text-sm font-semibold text-red-900 transition hover:bg-red-900 hover:text-white'
+					>
+						Back to Home
+					</a>
+				</div>
+			</div>
+		)
+	}
+
 	const keySpecs = [
-		{ label: 'Engine', value: '349cc, Air-Oil Cooled' },
-		{ label: 'Mileage', value: '36 kmpl (Approx)' },
-		{ label: 'Power', value: '20.2 bhp @ 6100 rpm' },
-		{ label: 'Torque', value: '27 Nm @ 4000 rpm' },
-		{ label: 'Kerb Weight', value: '181 kg' },
-		{ label: 'Brakes', value: 'Disc / Disc with ABS' },
+		{ label: 'Engine', value: `${singleBike.engine_cc}cc` },
+		{ label: 'Mileage', value: singleBike.mileage },
+		{ label: 'Fuel Type', value: singleBike.fuel_type },
+		{ label: 'Transmission', value: singleBike.transmission },
+		{ label: 'Colors', value: singleBike.color_options.join(', ') },
+		{ label: 'Stock', value: `${singleBike.stock} units` },
 	]
+
+	const formattedPrice = new Intl.NumberFormat('en-IN', {
+		style: 'currency',
+		currency: 'INR',
+		maximumFractionDigits: 0,
+	}).format(singleBike.price)
 
 	const variants = [
 		{ name: 'Hunter 350 Retro Factory', price: '₹ 1,49,900', waiting: '25 - 40 days' },
 		{ name: 'Hunter 350 Metro Dapper', price: '₹ 1,69,400', waiting: '20 - 35 days' },
 		{ name: 'Hunter 350 Metro Rebel', price: '₹ 1,74,500', waiting: '20 - 35 days' },
 	]
+
 
 	return (
 		<div className='min-h-screen bg-[#f5f6f8] text-gray-900'>
@@ -36,8 +65,10 @@ export default function SingleBike() {
 				<section className='rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-6'>
 					<div className='mb-5 flex flex-wrap items-start justify-between gap-3'>
 						<div>
-							<h2 className='text-2xl font-bold sm:text-3xl'>Royal Enfield Hunter 350</h2>
-							<p className='mt-1 text-sm text-gray-500'>Street | 349cc | 3 Variants | 8 Colors</p>
+							<h2 className='text-2xl font-bold sm:text-3xl'>{singleBike.name}</h2>
+							<p className='mt-1 text-sm text-gray-500'>
+								{singleBike.brand} | {singleBike.engine_cc}cc | {singleBike.mileage}
+							</p>
 							<div className='mt-2 flex items-center gap-2 text-sm'>
 								<span className='rounded-md bg-green-600 px-2 py-0.5 font-semibold text-white'>4.5 ★</span>
 								<span className='text-gray-600'>1,250 Ratings</span>
@@ -52,8 +83,8 @@ export default function SingleBike() {
 						<div className='space-y-4'>
 							<div className='overflow-hidden rounded-xl border border-gray-200 bg-gray-100'>
 								<img
-									src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1400&q=80'
-									alt='Royal Enfield Hunter 350'
+									src={singleBike.image}
+									alt={singleBike.name}
 									className='h-[240px] w-full object-cover sm:h-[360px]'
 								/>
 							</div>
@@ -84,9 +115,7 @@ export default function SingleBike() {
 							<div className='rounded-xl border border-gray-200 bg-gray-50 p-4'>
 								<h3 className='text-lg font-semibold'>Bike Highlights</h3>
 								<p className='mt-2 text-sm leading-6 text-gray-600'>
-									The Hunter 350 is a lightweight city-friendly roadster built on Royal Enfield’s
-									J-series platform. It offers easy handling, strong low-end torque, and premium
-									retro-modern styling ideal for daily commuting and weekend rides.
+									{singleBike.description}
 								</p>
 							</div>
 						</div>
@@ -94,7 +123,7 @@ export default function SingleBike() {
 						<aside className='space-y-4'>
 							<div className='rounded-xl border border-gray-200 bg-white p-4 shadow-sm'>
 								<p className='text-sm text-gray-500'>On-road Price (Avg)</p>
-								<p className='mt-1 text-3xl font-bold text-gray-900'>₹ 2,04,000</p>
+								<p className='mt-1 text-3xl font-bold text-gray-900'>{formattedPrice}</p>
 								<p className='mt-1 text-xs text-gray-500'>Includes RTO, Insurance and other charges</p>
 								<button className='mt-4 w-full rounded-lg bg-red-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-800'>
 									Get Best Offer
