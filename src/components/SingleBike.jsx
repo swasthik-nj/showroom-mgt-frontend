@@ -1,10 +1,31 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { popularBikes } from '../data/data.js'
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1'
+const AUTH_USER_KEY = 'authUser'
+
 export default function SingleBike() {
+	const navigate = useNavigate()
 	const { id } = useParams()
 	const singleBike = popularBikes.find((bike) => String(bike.id) === id)
+	const [isBookingModalOpen, setIsBookingModalOpen] = useState(false)
+	const [isSubmittingBooking, setIsSubmittingBooking] = useState(false)
+	const [createdBooking, setCreatedBooking] = useState(null)
+	const [isCheckingExistingBooking, setIsCheckingExistingBooking] = useState(false)
+
+	const storedUser = localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY)
+	let loggedInUser = null
+
+	if (storedUser) {
+		try {
+			loggedInUser = JSON.parse(storedUser)
+		} catch {
+			loggedInUser = null
+		}
+	}
 
 	if (!singleBike) {
 		return (
@@ -44,18 +65,117 @@ export default function SingleBike() {
 		{ name: 'Hunter 350 Metro Rebel', price: '₹ 1,74,500', waiting: '20 - 35 days' },
 	]
 
+	const loggedInUserId = loggedInUser?._id || loggedInUser?.id || ''
+	const loggedInUserEmail = loggedInUser?.email || ''
+
+	useEffect(() => {
+		const checkExistingBookingForBike = async () => {
+			if (!loggedInUser || !singleBike?.id) {
+				setCreatedBooking(null)
+				return
+			}
+
+			try {
+				setIsCheckingExistingBooking(true)
+				const response = await axios.get(`${API_BASE_URL}/bookings/user-bike`, {
+					params: {
+						bikeId: singleBike.id,
+						userId: loggedInUserId || undefined,
+						email: loggedInUserEmail || undefined,
+					},
+					withCredentials: true,
+				})
+
+				setCreatedBooking(response?.data?.data || null)
+			} catch {
+				setCreatedBooking(null)
+			} finally {
+				setIsCheckingExistingBooking(false)
+			}
+		}
+
+		checkExistingBookingForBike()
+	}, [loggedInUserId, loggedInUserEmail, singleBike?.id])
+
+	const handleOpenBookingModal = () => {
+		if (!loggedInUser) {
+			toast.error('Please login to book this bike')
+			navigate('/login')
+			return
+		}
+
+		if (createdBooking) {
+			toast.error('You already booked this bike. Get updates from the button below.')
+			return
+		}
+
+		setIsBookingModalOpen(true)
+	}
+
+	const handleConfirmBooking = async () => {
+		if (!loggedInUser) {
+			toast.error('Please login to book this bike')
+			return
+		}
+
+		const payload = {
+			user: {
+				userId: loggedInUser._id || loggedInUser.id || null,
+				username: loggedInUser.username,
+				email: loggedInUser.email,
+				phone: loggedInUser.phone,
+			},
+			bike: {
+				bikeId: singleBike.id,
+				name: singleBike.name,
+				brand: singleBike.brand,
+				price: singleBike.price,
+				image: singleBike.image,
+				engine_cc: singleBike.engine_cc,
+				mileage: singleBike.mileage,
+				fuel_type: singleBike.fuel_type,
+				transmission: singleBike.transmission,
+			},
+		}
+
+		try {
+			setIsSubmittingBooking(true)
+			const response = await axios.post(`${API_BASE_URL}/bookings`, payload, {
+				withCredentials: true,
+			})
+			const bookingData = response?.data?.data || null
+			setCreatedBooking(bookingData)
+			toast.success(response?.data?.message || 'Booking successful')
+		} catch (error) {
+			const backendMessage = error?.response?.data?.message
+			if (error?.response?.status === 409) {
+				const existingBooking = error?.response?.data?.data
+				if (existingBooking) {
+					setCreatedBooking(existingBooking)
+				}
+				setIsBookingModalOpen(false)
+				toast.error(backendMessage || 'You already booked this bike')
+				return
+			}
+
+			toast.error(backendMessage || 'Unable to confirm booking right now')
+		} finally {
+			setIsSubmittingBooking(false)
+		}
+	}
+
 
 	return (
 		<div className='min-h-screen bg-[#f5f6f8] text-gray-900'>
 			<header className='sticky top-0 z-20 border-b border-gray-200 bg-white/95 backdrop-blur'>
 				<div className='mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-10'>
 					<h1 className='text-xl font-bold text-red-900'>BikeShowroom</h1>
-					<a
-						href='/'
+					<Link
+						to='/'
 						className='rounded-lg border border-red-900 px-4 py-2 text-sm font-semibold text-red-900 transition hover:bg-red-900 hover:text-white'
 					>
 						Back to Home
-					</a>
+					</Link>
 				</div>
 			</header>
 
@@ -74,9 +194,7 @@ export default function SingleBike() {
 								<span className='text-gray-600'>1,250 Ratings</span>
 							</div>
 						</div>
-						<button className='rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-100'>
-							Compare
-						</button>
+						
 					</div>
 
 					<div className='grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr]'>
@@ -125,9 +243,23 @@ export default function SingleBike() {
 								<p className='text-sm text-gray-500'>On-road Price (Avg)</p>
 								<p className='mt-1 text-3xl font-bold text-gray-900'>{formattedPrice}</p>
 								<p className='mt-1 text-xs text-gray-500'>Includes RTO, Insurance and other charges</p>
-								<button className='mt-4 w-full rounded-lg bg-red-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-800'>
-									Get Best Offer
+								<button
+									type='button'
+									disabled={Boolean(createdBooking) || isCheckingExistingBooking}
+									onClick={handleOpenBookingModal}
+									className='mt-4 w-full rounded-lg bg-red-900 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70'
+								>
+									{isCheckingExistingBooking ? 'Checking Booking...' : createdBooking ? 'Already Booked' : 'Book now'}
 								</button>
+								{createdBooking && (
+									<button
+										type='button'
+										onClick={() => navigate(`/track-booking/${createdBooking.bookingId}`)}
+										className='mt-3 w-full rounded-lg border border-red-900 px-4 py-2.5 text-sm font-semibold text-red-900 transition hover:bg-red-50'
+									>
+										Get Updates About Your Bike
+									</button>
+								)}
 							</div>
 
 							<div className='rounded-xl border border-gray-200 bg-white p-4 shadow-sm'>
@@ -225,6 +357,92 @@ export default function SingleBike() {
 					</div>
 				</section>
 			</main>
+
+			{isBookingModalOpen && (
+				<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4'>
+					<div className='w-full max-w-2xl rounded-3xl bg-white p-6 shadow-2xl'>
+						<div className='flex items-start justify-between gap-3'>
+							<div>
+								<h2 className='text-2xl font-bold text-gray-900'>Confirm Booking</h2>
+								<p className='mt-1 text-sm text-gray-600'>Review your details and bike details before confirming booking.</p>
+							</div>
+							<button
+								type='button'
+								onClick={() => setIsBookingModalOpen(false)}
+								className='rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-100'
+							>
+								Close
+							</button>
+						</div>
+
+						{createdBooking ? (
+							<div className='mt-6 rounded-2xl border border-green-200 bg-green-50 p-5'>
+								<h3 className='text-lg font-bold text-green-700'>Booking successful</h3>
+								<p className='mt-2 text-sm text-gray-700'>
+									Your booking ID is <span className='font-semibold'>{createdBooking.bookingId}</span>.
+								</p>
+								<div className='mt-4 flex flex-wrap gap-3'>
+									<button
+										type='button'
+										onClick={() => navigate(`/track-booking/${createdBooking.bookingId}`)}
+										className='rounded-lg bg-red-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-800'
+									>
+										Get Updates About Your Bike
+									</button>
+									<button
+										type='button'
+										onClick={() => setIsBookingModalOpen(false)}
+										className='rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100'
+									>
+										Done
+									</button>
+								</div>
+							</div>
+						) : (
+							<>
+								<div className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2'>
+									<div className='rounded-2xl border border-gray-200 bg-gray-50 p-4'>
+										<h3 className='text-sm font-semibold text-gray-800'>User Details</h3>
+										<div className='mt-3 space-y-2 text-sm text-gray-600'>
+											<p><span className='font-semibold text-gray-900'>Name:</span> {loggedInUser?.username || 'N/A'}</p>
+											<p><span className='font-semibold text-gray-900'>Email:</span> {loggedInUser?.email || 'N/A'}</p>
+											<p><span className='font-semibold text-gray-900'>Phone:</span> {loggedInUser?.phone || 'N/A'}</p>
+										</div>
+									</div>
+
+									<div className='rounded-2xl border border-gray-200 bg-gray-50 p-4'>
+										<h3 className='text-sm font-semibold text-gray-800'>Bike Details</h3>
+										<div className='mt-3 space-y-2 text-sm text-gray-600'>
+											<p><span className='font-semibold text-gray-900'>Bike:</span> {singleBike.name}</p>
+											<p><span className='font-semibold text-gray-900'>Brand:</span> {singleBike.brand}</p>
+											<p><span className='font-semibold text-gray-900'>Price:</span> {formattedPrice}</p>
+											<p><span className='font-semibold text-gray-900'>Specs:</span> {singleBike.engine_cc}cc | {singleBike.mileage}</p>
+										</div>
+									</div>
+								</div>
+
+								<div className='mt-6 flex flex-wrap gap-3'>
+									<button
+										type='button'
+										disabled={isSubmittingBooking}
+										onClick={handleConfirmBooking}
+										className='rounded-lg bg-red-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-70'
+									>
+										{isSubmittingBooking ? 'Confirming...' : 'Confirm Booking'}
+									</button>
+									<button
+										type='button'
+										onClick={() => setIsBookingModalOpen(false)}
+										className='rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100'
+									>
+										Cancel
+									</button>
+								</div>
+							</>
+						)}
+					</div>
+				</div>
+			)}
 		</div>
 	)
 }
