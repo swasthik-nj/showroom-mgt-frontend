@@ -79,9 +79,9 @@ export default function Register() {
   }
 
   return (
-    <div className='min-h-screen lg:h-screen page-ambient text-white relative overflow-x-hidden overflow-y-auto lg:overflow-hidden'>
+    <div className='lg:h-[108vh] page-ambient -mt-13 text-white relative overflow-x-hidden  lg:overflow-hidden'>
       <div className='absolute inset-0'>
-        <div className='absolute -top-36 left-10 h-72 w-72 rounded-full bg-yellow-400/10 blur-3xl float-slow'></div>
+        <div className='absolute -top-30 left-10 h-72 w-72 rounded-full bg-yellow-400/10 blur-3xl float-slow'></div>
         <div className='absolute top-20 right-0 h-80 w-80 rounded-full bg-cyan-400/20 blur-3xl float-slow float-delay'></div>
         <div className='absolute -bottom-36 left-1/3 h-72 w-72 rounded-full bg-emerald-400/20 blur-3xl float-slow'></div>
       </div>

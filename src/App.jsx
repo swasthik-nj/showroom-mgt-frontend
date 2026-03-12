@@ -6,6 +6,7 @@ import Login from './components/Login'
 import Register from './components/Register'
 import SingleBike from './components/SingleBike'
 import AvlBIkes from './components/AvlBIkes'
+import Admin from './components/Admin'
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
          <Route path='/register' element={<Register/>}/>
          <Route path='/available-bikes' element={<AvlBIkes/>}/>
          <Route path='/bikes/:id' element={<SingleBike/>}/>
+         <Route path='/admin' element={<Admin/>}/>
        </Routes>
     </BrowserRouter>
     </>

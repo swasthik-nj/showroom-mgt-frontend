@@ -121,7 +121,7 @@ export default function Home() {
         <div className='max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center'>
           <div className='rounded-3xl overflow-hidden shadow-xl'>
             <img
-              src='https://images.unsplash.com/photo-1571607388263-1044f9ea01dd?auto=format&fit=crop&w=1200&q=80'
+              src='https://www.otocapital.in/_next/image?url=https%3A%2F%2Fassets.otocapital.in%2Fproduction%2Fnew-jawa-perak-unveiled-with-stealth-edition.png&w=1024&q=75'
               alt='Bike showroom interior'
               className='w-full h-[280px] sm:h-[360px] object-cover'
             />

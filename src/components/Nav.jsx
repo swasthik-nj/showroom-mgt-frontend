@@ -82,7 +82,7 @@ export default function Nav() {
           {user ? (
             <div className='flex items-center gap-3 ml-4 border-l border-yellow-400/30 pl-4'>
               <span className='text-yellow-400 text-sm font-normal'>
-                Welcome, {user.username}
+                Welcome, <span className='font-semibold'>{user.username}</span>
               </span>
               <button
                 onClick={handleLogout}
