@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Nav from './Nav'
 import { popularBikes } from '../data/data.js'
+import Footer from './Footer.jsx'
 
 const PRICE_RANGES = [
   { value: 'all', label: 'Any Budget', min: 0, max: Infinity },
@@ -333,6 +334,9 @@ export default function AvlBIkes() {
           )}
         </section>
       </main>
+        <footer id='contact' className='bg-red-950 text-white px-4 sm:px-8 lg:px-16 py-10'>
+                  <Footer/>
+              </footer>
     </div>
   )
 }

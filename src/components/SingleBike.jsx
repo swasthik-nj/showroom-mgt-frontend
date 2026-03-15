@@ -3,6 +3,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { popularBikes } from '../data/data.js'
+import { QRCodeSVG } from 'qrcode.react'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1'
 const AUTH_USER_KEY = 'authUser'
@@ -15,6 +16,11 @@ export default function SingleBike() {
 	const [isSubmittingBooking, setIsSubmittingBooking] = useState(false)
 	const [createdBooking, setCreatedBooking] = useState(null)
 	const [isCheckingExistingBooking, setIsCheckingExistingBooking] = useState(false)
+
+	const [isTestRideModalOpen, setIsTestRideModalOpen] = useState(false)
+	const [testRideBooking, setTestRideBooking] = useState(null)
+	const [selectedTestDate, setSelectedTestDate] = useState('')
+	const [selectedTestTime, setSelectedTestTime] = useState('')
 
 	const storedUser = localStorage.getItem(AUTH_USER_KEY) || sessionStorage.getItem(AUTH_USER_KEY)
 	let loggedInUser = null
@@ -68,6 +74,31 @@ export default function SingleBike() {
 	const loggedInUserId = loggedInUser?._id || loggedInUser?.id || ''
 	const loggedInUserEmail = loggedInUser?.email || ''
 
+	const TEST_RIDE_TIME_SLOTS = ['09:00 AM', '11:00 AM', '01:00 PM', '03:00 PM', '05:00 PM']
+
+	const availableTestDates = (() => {
+		const dates = []
+		const base = new Date()
+		base.setHours(0, 0, 0, 0)
+		for (let i = 1; dates.length < 6; i++) {
+			const d = new Date(base)
+			d.setDate(base.getDate() + i)
+			if (d.getDay() !== 0) {
+				dates.push(d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }))
+			}
+		}
+		return dates
+	})()
+
+	const testRideStorageKey = `testRide_bike${singleBike.id}_${loggedInUserId || loggedInUserEmail}`
+
+	useEffect(() => {
+		const saved = localStorage.getItem(testRideStorageKey)
+		if (saved) {
+			try { setTestRideBooking(JSON.parse(saved)) } catch { /* ignore */ }
+		}
+	}, [testRideStorageKey])
+
 	useEffect(() => {
 		const checkExistingBookingForBike = async () => {
 			if (!loggedInUser || !singleBike?.id) {
@@ -96,6 +127,40 @@ export default function SingleBike() {
 
 		checkExistingBookingForBike()
 	}, [loggedInUserId, loggedInUserEmail, singleBike?.id])
+
+	const handleOpenTestRideModal = () => {
+		if (!loggedInUser) {
+			toast.error('Please login to book a test ride')
+			navigate('/login')
+			return
+		}
+		setIsTestRideModalOpen(true)
+	}
+
+	const handleConfirmTestRide = () => {
+		if (!selectedTestDate || !selectedTestTime) {
+			toast.error('Please select a date and time slot')
+			return
+		}
+		const ref = `TR-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substring(2, 5).toUpperCase()}`
+		const booking = {
+			ref,
+			bikeName: singleBike.name,
+			brand: singleBike.brand,
+			bikeId: singleBike.id,
+			userName: loggedInUser.username,
+			email: loggedInUser.email,
+			phone: loggedInUser.phone,
+			date: selectedTestDate,
+			time: selectedTestTime,
+			showroom: 'Bike Showroom, Main Road, City Center',
+		}
+		localStorage.setItem(testRideStorageKey, JSON.stringify(booking))
+		setTestRideBooking(booking)
+		setSelectedTestDate('')
+		setSelectedTestTime('')
+		toast.success('Test ride booked!')
+	}
 
 	const handleOpenBookingModal = () => {
 		if (!loggedInUser) {
@@ -207,27 +272,23 @@ export default function SingleBike() {
 								/>
 							</div>
 
-							<div className='grid grid-cols-4 gap-3'>
+							<div className='grid grid-cols-3 gap-3'>
 								<img
-									src='https://images.unsplash.com/photo-1609630875171-b1321377ee65?auto=format&fit=crop&w=600&q=80'
+									src={singleBike.img1}
 									alt='Hunter 350 front view'
-									className='h-16 w-full rounded-lg object-cover sm:h-20'
+									className='h-20 w-full rounded-lg object-cover sm:h-35'
 								/>
 								<img
-									src='https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=900&q=80'
+									src={singleBike.img2}
 									alt='Hunter 350 side view'
-									className='h-16 w-full rounded-lg object-cover sm:h-20'
+									className='h-20 w-full rounded-lg object-cover sm:h-35'
 								/>
 								<img
-									src='https://images.unsplash.com/photo-1515777315835-281b94c9589f?auto=format&fit=crop&w=600&q=80'
+									src={singleBike.img3}
 									alt='Hunter 350 rear view'
-									className='h-16 w-full rounded-lg object-cover sm:h-20'
+									className='h-20 w-full rounded-lg object-cover sm:h-35'
 								/>
-								<img
-									src='https://images.unsplash.com/photo-1558981285-6f0c94958bb6?auto=format&fit=crop&w=600&q=80'
-									alt='Hunter 350 close up'
-									className='h-16 w-full rounded-lg object-cover sm:h-20'
-								/>
+								
 							</div>
 
 							<div className='rounded-xl border border-gray-200 bg-gray-50 p-4'>
@@ -265,16 +326,20 @@ export default function SingleBike() {
 							<div className='rounded-xl border border-gray-200 bg-white p-4 shadow-sm'>
 								<p className='text-sm font-semibold text-gray-800'>EMI starts at</p>
 								<p className='mt-1 text-2xl font-bold'>₹ 6,790 / month</p>
-								<button className='mt-3 w-full rounded-lg border border-red-900 px-4 py-2.5 text-sm font-semibold text-red-900 transition hover:bg-red-50'>
+								{/* <button className='mt-3 w-full rounded-lg border border-red-900 px-4 py-2.5 text-sm font-semibold text-red-900 transition hover:bg-red-50'>
 									Check Finance
-								</button>
+								</button> */}
 							</div>
 
 							<div className='rounded-xl border border-gray-200 bg-white p-4 shadow-sm'>
 								<h4 className='text-sm font-semibold'>Quick Actions</h4>
 								<div className='mt-3 space-y-2'>
-									<button className='w-full rounded-lg border border-gray-300 px-3 py-2 text-left text-sm hover:bg-gray-50'>
-										Book Test Ride
+									<button
+										type='button'
+										onClick={handleOpenTestRideModal}
+										className='w-full rounded-lg border border-red-900 bg-red-50 px-3 py-2 text-left text-sm font-semibold text-red-900 transition hover:bg-red-900 hover:text-white'
+									>
+										{testRideBooking ? '🏍 Test Ride Booked — View QR' : 'Book Test Ride'}
 									</button>
 									<button className='w-full rounded-lg border border-gray-300 px-3 py-2 text-left text-sm hover:bg-gray-50'>
 										View Deals
@@ -313,7 +378,7 @@ export default function SingleBike() {
 										<th className='px-3 py-3 font-medium'>Variant</th>
 										<th className='px-3 py-3 font-medium'>On-road Price</th>
 										<th className='px-3 py-3 font-medium'>Waiting Period</th>
-										<th className='px-3 py-3 font-medium'>Action</th>
+										{/* <th className='px-3 py-3 font-medium'>Action</th> */}
 									</tr>
 								</thead>
 								<tbody>
@@ -323,9 +388,9 @@ export default function SingleBike() {
 											<td className='px-3 py-4'>{variant.price}</td>
 											<td className='px-3 py-4 text-gray-600'>{variant.waiting}</td>
 											<td className='px-3 py-4'>
-												<button className='rounded-md border border-red-900 px-3 py-1.5 text-xs font-semibold text-red-900 hover:bg-red-50'>
+												{/* <button className='rounded-md border border-red-900 px-3 py-1.5 text-xs font-semibold text-red-900 hover:bg-red-50'>
 													Select
-												</button>
+												</button> */}
 											</td>
 										</tr>
 									))}
@@ -357,6 +422,143 @@ export default function SingleBike() {
 					</div>
 				</section>
 			</main>
+
+			{isTestRideModalOpen && (
+				<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4'>
+					<div className='w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl'>
+						<div className='flex items-start justify-between gap-3'>
+							<div>
+								<h2 className='text-2xl font-bold text-gray-900'>
+									{testRideBooking ? 'Your Test Ride Booking' : 'Book a Test Ride'}
+								</h2>
+								<p className='mt-1 text-sm text-gray-500'>
+									{testRideBooking ? 'Show the QR code at the showroom counter.' : `${singleBike.name} · ${singleBike.brand}`}
+								</p>
+							</div>
+							<button
+								type='button'
+								onClick={() => setIsTestRideModalOpen(false)}
+								className='rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-semibold text-gray-600 transition hover:bg-gray-100'
+							>
+								Close
+							</button>
+						</div>
+
+						{testRideBooking ? (
+							<div className='mt-5 flex flex-col items-center gap-4'>
+								<div className='w-full rounded-2xl border border-green-200 bg-green-50 p-4 text-sm text-gray-700'>
+									<p className='font-bold text-green-700 text-base mb-2'>✅ Test Ride Confirmed</p>
+									<p><span className='font-semibold text-gray-900'>Ref:</span> {testRideBooking.ref}</p>
+									<p><span className='font-semibold text-gray-900'>Bike:</span> {testRideBooking.bikeName} ({testRideBooking.brand})</p>
+									<p><span className='font-semibold text-gray-900'>Rider:</span> {testRideBooking.userName}</p>
+									<p><span className='font-semibold text-gray-900'>Date:</span> {testRideBooking.date}</p>
+									<p><span className='font-semibold text-gray-900'>Time:</span> {testRideBooking.time}</p>
+									<p><span className='font-semibold text-gray-900'>Venue:</span> {testRideBooking.showroom}</p>
+								</div>
+
+								<div className='flex flex-col items-center gap-2 rounded-2xl border border-gray-200 bg-gray-50 p-5'>
+									<p className='text-xs font-semibold uppercase tracking-widest text-gray-500'>Scan at Showroom Counter</p>
+									<QRCodeSVG
+										value={`BIKE SHOWROOM - TEST RIDE\nRef: ${testRideBooking.ref}\nBike: ${testRideBooking.bikeName} (${testRideBooking.brand})\nRider: ${testRideBooking.userName} | ${testRideBooking.phone}\nDate: ${testRideBooking.date}\nTime: ${testRideBooking.time}\nVenue: ${testRideBooking.showroom}`}
+										size={200}
+										bgColor='#ffffff'
+										fgColor='#7f1d1d'
+										level='M'
+									/>
+									<p className='text-xs text-gray-400'>Show this QR code to the showroom staff</p>
+								</div>
+
+								<div className='flex w-full gap-3'>
+									<button
+										type='button'
+										onClick={() => {
+											localStorage.removeItem(testRideStorageKey)
+											setTestRideBooking(null)
+											toast.success('Test ride booking cancelled')
+										}}
+										className='flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100'
+									>
+										Cancel Booking
+									</button>
+									<button
+										type='button'
+										onClick={() => setIsTestRideModalOpen(false)}
+										className='flex-1 rounded-lg bg-red-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-800'
+									>
+										Done
+									</button>
+								</div>
+							</div>
+						) : (
+							<div className='mt-5 space-y-5'>
+								<div>
+									<p className='text-sm font-semibold text-gray-800 mb-2'>Select a Date</p>
+									<div className='grid grid-cols-3 gap-2'>
+										{availableTestDates.map((date) => (
+											<button
+												key={date}
+												type='button'
+												onClick={() => setSelectedTestDate(date)}
+												className={`rounded-xl border px-2 py-2 text-xs font-semibold transition ${
+													selectedTestDate === date
+														? 'border-red-900 bg-red-950 text-white'
+														: 'border-gray-200 bg-gray-50 text-gray-800 hover:border-red-300'
+												}`}
+											>
+												{date}
+											</button>
+										))}
+									</div>
+								</div>
+
+								<div>
+									<p className='text-sm font-semibold text-gray-800 mb-2'>Select a Time Slot</p>
+									<div className='flex flex-wrap gap-2'>
+										{TEST_RIDE_TIME_SLOTS.map((slot) => (
+											<button
+												key={slot}
+												type='button'
+												onClick={() => setSelectedTestTime(slot)}
+												className={`rounded-xl border px-4 py-2 text-xs font-semibold transition ${
+													selectedTestTime === slot
+														? 'border-red-900 bg-red-950 text-white'
+														: 'border-gray-200 bg-gray-50 text-gray-800 hover:border-red-300'
+												}`}
+											>
+												{slot}
+											</button>
+										))}
+									</div>
+								</div>
+
+								{selectedTestDate && selectedTestTime && (
+									<div className='rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-gray-700'>
+										<p className='font-semibold text-gray-900'>📅 {selectedTestDate} · {selectedTestTime}</p>
+										<p className='mt-1 text-xs text-gray-500'>Bike Showroom, Main Road, City Center</p>
+									</div>
+								)}
+
+								<div className='flex gap-3'>
+									<button
+										type='button'
+										onClick={handleConfirmTestRide}
+										className='flex-1 rounded-lg bg-red-950 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-60'
+									>
+										Confirm Test Ride
+									</button>
+									<button
+										type='button'
+										onClick={() => setIsTestRideModalOpen(false)}
+										className='flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-100'
+									>
+										Cancel
+									</button>
+								</div>
+							</div>
+						)}
+					</div>
+				</div>
+			)}
 
 			{isBookingModalOpen && (
 				<div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4'>

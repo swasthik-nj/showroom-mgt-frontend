@@ -1,4 +1,4 @@
- const popularBikes = [
+const popularBikes = [
     {
       id: 1,
       name: "Apache RTR 160",
@@ -11,7 +11,10 @@
       color_options: ["Black", "Red", "Blue"],
       stock: 12,
       image: "https://imgd.aeplcdn.com/664x374/n/cw/ec/1/versions/tvs-apache-160-rm-drum-black-edition1732629216165.jpg?q=80",
-      description: "Sporty commuter bike with strong performance."
+      description: "Sporty commuter bike with strong performance.",
+      img1:"https://www.tvsmotor.com/tvs-apache/-/media/08-09-22/2022-TVS-Apache-RTR-160.jpg",
+      img2:"https://www.tvsapache.com/assets/images/160/160-spec-bike-new.png",
+      img3:"https://comotos.co/wp-content/uploads/2018/11/Tvs-apache-rtr-160-4v-negra.jpg"
     },
     {
       id: 2,
@@ -25,7 +28,10 @@
       color_options: ["Black", "White"],
       stock: 8,
       image: "https://imgd.aeplcdn.com/664x374/n/bw/models/colors/tvs-select-model-glossy-black-be-1718781282961.jpeg?q=80",
-      description: "Performance bike with racing DNA."
+      description: "Performance bike with racing DNA.",
+      img1:"https://cdn.bikedekho.com/processedimages/tvs/2025-apache-rtr-200-4v/source/2025-apache-rtr-200-4v68bebbf83bddf.jpg",
+      img2:"https://images.carandbike.com/cms/articles/3204034/TVS_Apache_RTR_160_4_V_removebg_preview_1_2022_11_30_T04_24_54_233_Z_53cf310678.png",
+      img3:"https://motorbridge.com/wp-content/uploads/2022/11/apache1-1024x536.jpg"
     },
     {
       id: 3,
@@ -39,7 +45,10 @@
       color_options: ["Black", "Blue", "Red"],
       stock: 15,
       image: "https://imgd.aeplcdn.com/664x374/n/93ocqib_1909008.png?q=80",
-      description: "Popular commuter bike with sporty design."
+      description: "Popular commuter bike with sporty design.",
+      img1:"https://images.91wheels.com/assets/b_images/gallery/bajaj/pulsar-125-neon/bajaj-pulsar-125-neon-0-1588421134.png?width=300&q=60",
+      img2:"https://tse2.mm.bing.net/th/id/OIP.0d15_kLJpF54FjjoVjgW0QHaE8?w=2047&h=1365&rs=1&pid=ImgDetMain&o=7&rm=3",
+      img3:"https://bd.gaadicdn.com/processedimages/bajaj/pulsar-125/source/pulsar-1255fd9899ab4aa7.jpg?imwidth=880"
     },
     {
       id: 4,
@@ -53,7 +62,10 @@
       color_options: ["Yellow", "Grey", "Red"],
       stock: 10,
       image: "https://imgd.aeplcdn.com/0X0/n/cw/ec/58025/pulsar-ns-right-side-view-12.png?isig=0&q=80",
-      description: "Streetfighter with powerful engine."
+      description: "Streetfighter with powerful engine.",
+      img1:"https://tse2.mm.bing.net/th/id/OIP.i7w7MJDtJuH1fhivmzVjGAHaEb?rs=1&pid=ImgDetMain&o=7&rm=3",
+      img2:"https://ic4.maxabout.us/autos/tw_india/B/2023/3/bajaj-pulsar-ns200-in-pearl-metallic-white-colour.jpg",
+      img3:"https://bikesguide.ikman.lk/wp-content/uploads/2024/02/ns-200-featured.jpg"
     },
     {
       id: 5,
@@ -67,7 +79,11 @@
       color_options: ["Orange", "Black"],
       stock: 6,
       image: "https://imgd.aeplcdn.com/664x374/n/cw/ec/1/versions/ktm-duke-200-standard1771926248181.jpg?q=80",
-      description: "Lightweight street performance bike."
+      description: "Lightweight street performance bike.",
+      img1:"https://cdn.bikedekho.com/processedimages/ktm/2023-200-duke/source/2023-200-duke66fea6b410ee9.jpg",
+      img2:"https://urquizamotos.com.ar/111400-large_default/ktm-duke-200.jpg",
+      img3:"https://somosmoto.pe/images/models/gallery/ktm-duke-200-sin-abs-2023-gallery-ec720d.jpg"
+
     },
     {
       id: 6,
@@ -80,8 +96,12 @@
       transmission: "Manual",
       color_options: ["Orange", "Silver"],
       stock: 5,
-      image: "https://imgd.aeplcdn.com/664x374/n/cw/ec/1/versions/--standard-obd-2b1741772118539.jpg?q=80",
-      description: "High performance naked sport bike."
+      image: "https://motorsportsnewswire.com/wp-content/uploads/2023/11/2024-KTM-DUKE-390-3.jpg",
+      description: "High performance naked sport bike.",
+      img1:"https://www.iamabiker.com/wp-content/uploads/2023/08/2024-KTM-Duke-390.jpg",
+      img2:"https://i.pinimg.com/originals/b5/24/bb/b524bb1cd05372a72125379adea83be6.jpg",
+      img3:"https://drop.ndtv.com/albums/AUTO/2017-ktm-390-duke-first-ride-review/3.jpg"
+
     },
     {
       id: 7,
@@ -94,8 +114,12 @@
       transmission: "Manual",
       color_options: ["Black", "Chrome", "Red"],
       stock: 7,
-      image: "/images/classic350.jpg",
-      description: "Iconic retro cruiser motorcycle."
+      image: "https://tse2.mm.bing.net/th/id/OIP.-LevaKmx4-Uw05R8mJ96HwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Iconic retro cruiser motorcycle.",
+      img1:"https://www.wheelsbingo.com/images/web-img/bikes/bike_images/royal-enfield-classic-350.webp",
+      img2:"https://cdn.shriramfinance.in/tw-marketplace/model/classic-350.jpg",
+      img3:"https://www.royalenfield.com/content/dam/royal-enfield/classic-350/gallery/thumbnail/gallery-7.jpg"
+
     },
     {
       id: 8,
@@ -108,8 +132,11 @@
       transmission: "Manual",
       color_options: ["Black", "Blue", "White"],
       stock: 9,
-      image: "/images/hunter350.jpg",
-      description: "Urban roadster with modern styling."
+      image: "https://www.royalenfield.com/content/dam/royal-enfield/motorcycles/new-classic-350/studio-shots/new-360/madras-red/01.png",
+      description: "Urban roadster with modern styling.",
+      img1:"https://images-stag.jazelc.com/uploads/theautopian-m2en/2023-royal-enfield-hunter-350-fi-1.jpg",
+      img2:"https://www.rushlane.com/wp-content/uploads/2025/04/2025-royal-enfield-hunter-350-launch-price-8.jpeg",
+      img3:"https://imgd.aeplcdn.com/664x374/n/cw/ec/124013/hunter-350-left-front-three-quarter-2.jpeg?isig=0&q=80"
     },
     {
       id: 9,
@@ -122,8 +149,12 @@
       transmission: "Manual",
       color_options: ["Blue", "Black"],
       stock: 11,
-      image: "/images/r15.jpg",
-      description: "Fully faired sport bike with racing design."
+      image: "https://tse1.mm.bing.net/th/id/OIP.UKz1W1Z5nt-JbGd74kYFUgHaEU?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Fully faired sport bike with racing design.",
+      img1:"https://bikeadvice.in/wp-content/uploads/2021/12/All-New-R15-Connected-Tech-Black-1536x1351-1-1200x1055.jpg",
+      img2:"https://images.91wheels.com/assets/b_images/gallery/yamaha/r15-v4/yamaha-r15-v4-0-1731054067.jpg",
+      img3:"https://www.team-bhp.com/forum/attachments/motorbikes/2209956d1632210555-yamaha-r15-v4-0-edit-now-launched-rs-1-67-lakh-20210921_131732.jpg"
+
     },
     {
       id: 10,
@@ -136,8 +167,12 @@
       transmission: "Manual",
       color_options: ["Black", "Cyan"],
       stock: 10,
-      image: "/images/mt15.jpg",
-      description: "Aggressive naked street bike."
+      image: "https://images.carandbike.com/cms/cms/articles/2023/2/3205803/Yamaha_MT_15_V2_0_f6cf4ab7c1.jpg",
+      description: "Aggressive naked street bike.",
+      img1:"https://bd.gaadicdn.com/processedimages/yamaha/mt-15-2-0/source/mt-15-2-063ea25b00fa58.jpg",
+      img2:"https://motoringworld.in/wp-content/uploads/2022/05/Yamaha-MT-15-30-1536x1024.jpg",
+      img3:"https://www.armaspeed.com/wp-content/uploads/2022/07/armaspeed-yamaha-mt-15.jpg"
+
     },
     {
       id: 11,
@@ -150,8 +185,12 @@
       transmission: "Manual",
       color_options: ["Red", "Grey"],
       stock: 13,
-      image: "/images/hornet.jpg",
-      description: "Stylish street bike for daily rides."
+      image: "https://tse4.mm.bing.net/th/id/OIP.IwSDiEZahe7W7Qa4Dpp-BQHaDt?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Stylish street bike for daily rides.",
+      img1:"https://acko-cms.ackoassets.com/Honda_Hornet_2_0_Matte_Marvel_Blue_Metallic_5b138f5b79.jpg",
+      img2:"https://www.bikes4sale.in/pictures/default/honda-hornet-2-0/honda-hornet-2-0-pic-11.jpg",
+      img3:"https://5.imimg.com/data5/SELLER/Default/2023/10/356017843/LC/OL/CR/3027728/mat-sangria-red-metallic-dev-one-1000x1000.jpg"
+
     },
     {
       id: 12,
@@ -164,8 +203,12 @@
       transmission: "Manual",
       color_options: ["Black", "Grey"],
       stock: 20,
-      image: "/images/shine.jpg",
-      description: "Reliable commuter bike."
+      image: "https://tse2.mm.bing.net/th/id/OIP.FCYqOpJ2bYsN8LU31wIVnQHaEi?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Reliable commuter bike.", 
+      img1:"https://tse1.mm.bing.net/th/id/OIP.5QHrZ-lhMONx-C3Z2GTcjwHaEK?rs=1&pid=ImgDetMain&o=7&rm=3",
+      img2:"https://cdn1.smartprix.com/rx-i0cM9X4fK-w1200-h1200/0cM9X4fK.jpg",
+      img3:"https://news24online.com/wp-content/uploads/2023/06/Benky-collage5.jpg"
+
     },
     {
       id: 13,
@@ -178,8 +221,12 @@
       transmission: "Manual",
       color_options: ["Black", "Blue"],
       stock: 25,
-      image: "/images/splendor.jpg",
-      description: "India's most trusted commuter bike."
+      image: "https://www.rushlane.com/wp-content/uploads/2020/05/bs4-hero-splendor-plus-prices-slashed.jpg",
+      description: "India's most trusted commuter bike.",
+      img1:"https://bd.gaadicdn.com/processedimages/hero/splendor-plus-xtec/source/splendor-plus-xtec665968736dd79.jpg",
+      img2:"https://images.91wheels.com/assets/b_images/main/models/profile/profile1742467410.jpg",
+      img3:"https://livingwithgravity.com/wp-content/uploads/2022/10/Cover-Hero-Splendor-Plus-Matte-Sheild-Gold.png"
+
     },
     {
       id: 14,
@@ -192,8 +239,12 @@
       transmission: "Manual",
       color_options: ["Red", "Black"],
       stock: 14,
-      image: "/images/xtreme160.jpg",
-      description: "Sporty street bike with lightweight frame."
+      image: "https://tse3.mm.bing.net/th/id/OIP.PxfOD7S4SeE1uWR-GBMKjwHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Sporty street bike with lightweight frame.",
+      img1:"https://imgd.aeplcdn.com/1280x720/n/cw/ec/48478/hero-xtreme-160r-front-right-three-quarter0.jpeg?wm=2&q=75",
+      img2:"https://gaadiwaadi.com/wp-content/uploads/2020/07/hero-xtreme-160R-2020-1-1068x786.jpg",
+      img3:"https://bd.gaadicdn.com/processedimages/hero/xtreme-160r-4v/source/xtreme-160r-4v648a9bb5b68fe.jpg?imwidth=880"
+
     },
     {
       id: 15,
@@ -206,8 +257,12 @@
       transmission: "Manual",
       color_options: ["Blue", "Black"],
       stock: 12,
-      image: "/images/gixxer.jpg",
-      description: "Premium street motorcycle."
+      image: "https://tse4.mm.bing.net/th/id/OIP.jRJenwenZXEdwdrnZ90M-QHaFY?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Premium street motorcycle.",
+      img1:"https://cdn.pixabay.com/photo/2022/06/28/13/29/suzuki-gixxer-sf-7289732_1280.jpg",
+      img2:"https://suzuki.com.gt/motos/wp-content/uploads/diagonal-40.png",
+      img3:"https://media.zigcdn.com/media/content/2019/Jul/suzuki_gixxer_sf_12.jpg"
+
     },
     {
       id: 16,
@@ -220,8 +275,12 @@
       transmission: "Manual",
       color_options: ["Blue", "Silver"],
       stock: 10,
-      image: "/images/gixxersf.jpg",
-      description: "Fully faired version of Gixxer."
+      image: "https://cms-i.autodaily.vn/du-lieu/2023/06/11/Suzuki%20Gixxer%20SF%20250%202023%20(1).jpg",
+      description: "Fully faired version of Gixxer.",
+      img1:"https://cms-i.autodaily.vn/du-lieu/2023/06/11/Suzuki%20Gixxer%20SF%20250%202023%20(1).jpg",
+      img2:"https://img.indianautosblog.com/2020/10/05/suzuki-gixxer-sf-pearl-mira-red-4074.jpeg",
+      img3:"https://suzukimotorcycle.co.za/wp-content/uploads/2022/11/Gixer-Black-250-right-scaled.jpg"
+
     },
     {
       id: 17,
@@ -234,8 +293,12 @@
       transmission: "Manual",
       color_options: ["Green", "Black"],
       stock: 6,
-      image: "/images/dominar400.jpg",
-      description: "Touring bike with strong performance."
+      image: "https://tse2.mm.bing.net/th/id/OIP.v1x0DSU2DJDT1C4rA6DtVgHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+      description: "Touring bike with strong performance.",
+      img1:"https://www.thrustzone.com/wp-content/uploads/2019/03/2019-Bajaj-Dominar-400-Review-28.jpg",
+      img2:"https://wallpapercave.com/wp/wp4404202.jpg",
+      img3:"https://www.team-bhp.com/forum/attachments/motorbikes/1596917d1484806866-ridden-bajaj-dominar-400-img_0706.jpg"
+
     },
     {
       id: 18,
@@ -248,8 +311,12 @@
       transmission: "Manual",
       color_options: ["Yellow", "Black"],
       stock: 18,
-      image: "/images/raider.jpg",
-      description: "Stylish commuter bike for young riders."
+      image: "https://dailykiran.com/wp-content/uploads/2025/05/TVS-Raider-125.jpg",
+      description: "Stylish commuter bike for young riders.",
+      img1:"https://news24online.com/wp-content/uploads/2023/06/TVS-Raider-125-1.png",
+      img2:"https://tse4.mm.bing.net/th/id/OIP.wDqIa30UwBe1lV-o3t46EgHaEK?w=1280&h=720&rs=1&pid=ImgDetMain&o=7&rm=3",
+      img3:"https://imgd.aeplcdn.com/642x361/n/cw/ec/182515/bajaj-cng-freedom-125-left-front-three-quarter3.jpeg?isig=0&q=75"
+
     },
     {
       id: 19,
@@ -262,8 +329,12 @@
       transmission: "Manual",
       color_options: ["Black", "Green"],
       stock: 9,
-      image: "/images/fzs.jpg",
-      description: "Muscular street bike with comfort."
+      image: "https://imgd.aeplcdn.com/600x337/bw/ec/41372/Yamaha-FZ-S-V3-164598.jpg?wm=2&q=75",
+      description: "Muscular street bike with comfort.",
+      img1:"https://imgd.aeplcdn.com/600x337/bw/ec/41372/Yamaha-FZ-S-V3-164598.jpg?wm=2&q=75",
+      img2:"https://cdni.autocarindia.com/Utils/ImageResizer.ashx?n=http:%2F%2Fcdni.autocarindia.com%2FExtraImages%2F20190122100713_FZS-FI-2.jpg&h=578&w=872&c=1",
+      img3:"https://images.carandbike.com/bike-images/large/yamaha/fz-s-v30-fi/yamaha-fz-s-v30-fi.jpg?v=17"
+
     },
     {
       id: 20,
@@ -276,10 +347,14 @@
       transmission: "Manual",
       color_options: ["Red", "Blue"],
       stock: 5,
-      image: "/images/meteor350.jpg",
-      description: "Cruiser motorcycle for long rides."
+      image: "https://cdn.bikedekho.com/processedimages/royal-enfield/meteor-350/source/meteor-35068c7e581bedf0.jpg",
+      description: "Cruiser motorcycle for long rides.",
+      img1:"https://tse1.mm.bing.net/th/id/OIP.IASfhD-TvGMQnCDkajobNAHaE8?rs=1&pid=ImgDetMain&o=7&rm=3",
+      img2:"https://cdn.bikedekho.com/processedimages/royal-enfield/meteor-350/source/meteor-35068e792df91c55.jpg",
+      img3:"https://wallpapers.com/images/hd/royal-enfield-pictures-3uu0q8aty6lavy68.jpg"
+
     }
   
   ]
 
-  export { popularBikes }   
+  export { popularBikes }

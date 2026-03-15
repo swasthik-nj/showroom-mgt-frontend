@@ -71,10 +71,10 @@ export default function Nav() {
             <Link to='/available-bikes' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
               Collection
             </Link>
-            <a href='#' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
+            <Link to='/available-bikes' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
               Book
-            </a>
-            <a href='#' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
+            </Link>
+            <a href='#contact' className='px-4 py-3 lg:mx-2 lg:py-0 hover:text-yellow-400 lg:text-lg transition duration-300'>
               Contact
             </a>
           </div>

@@ -314,6 +314,7 @@ export default function Admin() {
   }
 
   const availableBikes = bikes.filter((bike) => Number(bike.stock) > 0)
+  const totalStock = bikes.reduce((sum, bike) => sum + Number(bike.stock || 0), 0)
   const deliveredBookingsCount = bookings.filter(
     (booking) => normalizeBookingStage(booking.bookingStatus) === 'delivered'
   ).length
@@ -364,7 +365,7 @@ export default function Admin() {
                   </button>
                 </div>
 
-                <div className='mt-5 grid grid-cols-1 gap-4 md:grid-cols-4'>
+                <div className='mt-5 grid grid-cols-1 gap-4 md:grid-cols-5'>
                   <article className='rounded-xl border border-gray-200 bg-gray-50 p-4'>
                     <p className='text-sm font-medium text-gray-600'>Total Sales Amount</p>
                     <p className='mt-1 text-2xl font-bold text-red-950'>
@@ -378,8 +379,13 @@ export default function Admin() {
                   </article>
 
                   <article className='rounded-xl border border-gray-200 bg-gray-50 p-4'>
-                    <p className='text-sm font-medium text-gray-600'>Total Bikes</p>
+                    <p className='text-sm font-medium text-gray-600'>Total Bikes Type</p>
                     <p className='mt-1 text-2xl font-bold text-red-950'>{salesSummary.bikeCount || bikes.length}</p>
+                  </article>
+
+                  <article className='rounded-xl border border-gray-200 bg-gray-50 p-4'>
+                    <p className='text-sm font-medium text-gray-600'>Total Stock</p>
+                    <p className='mt-1 text-2xl font-bold text-red-950'>{totalStock}</p>
                   </article>
 
                   <article className='rounded-xl border border-gray-200 bg-gray-50 p-4'>

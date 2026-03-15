@@ -9,6 +9,12 @@
 	font-family: 'Syne', 'Space Grotesk', sans-serif;
 }
 
+*{
+	box-sizing: border-box;
+	scroll-behavior: smooth;
+	scrollbar-width: none;
+}
+
 .page-ambient {
 	background:
 		radial-gradient(1200px 600px at 10% -10%, rgba(250, 204, 21, 0.2), transparent 60%),
