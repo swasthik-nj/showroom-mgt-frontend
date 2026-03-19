@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { popularBikes } from '../data/data.js'
 import { QRCodeSVG } from 'qrcode.react'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001/api/v1'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 const AUTH_USER_KEY = 'authUser'
 
 export default function SingleBike() {
