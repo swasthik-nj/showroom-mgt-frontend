@@ -66,6 +66,225 @@ flowchart TB
 	Admin --> DB
 ```
 
+## Detailed UML Diagrams
+
+### 1. Class Diagram
+
+```mermaid
+classDiagram
+	class User {
+		+String username
+		+String email
+		+String password
+		+String phone
+		+String refreshToken
+		+Date forgotPasswordExpire
+		+String emailVarificationToken
+		+Date emailVarificationExpiry
+		+Boolean isEmailVarified
+		+isPasswordCorrect(password)
+		+generateAccessToken()
+		+generateRefreshToken()
+		+generateTempororyToken()
+	}
+
+	class Bike {
+		+Number id
+		+String name
+		+String brand
+		+Number price
+		+Number engine_cc
+		+String mileage
+		+String fuel_type
+		+String transmission
+		+String[] color_options
+		+Number stock
+		+String image
+		+String description
+		+String bookingStatus
+		+Number totalSoldUnits
+		+Number totalSalesAmount
+		+YearlySale[] yearlySales
+	}
+
+	class YearlySale {
+		+Number year
+		+Number units
+		+Number amount
+	}
+
+	class Booking {
+		+String bookingId
+		+BookingUser user
+		+BookingBike bike
+		+String bookingStatus
+		+Boolean isSaleRecorded
+		+Date deliveredAt
+		+BookingStatusHistory[] statusHistory
+	}
+
+	class BookingUser {
+		+String userId
+		+String username
+		+String email
+		+String phone
+	}
+
+	class BookingBike {
+		+Number bikeId
+		+String name
+		+String brand
+		+Number price
+		+String image
+		+Number engine_cc
+		+String mileage
+		+String fuel_type
+		+String transmission
+	}
+
+	class BookingStatusHistory {
+		+String status
+		+String note
+		+Date updatedAt
+	}
+
+	class AuthController {
+		+registeredUser(req,res)
+		+login(req,res)
+	}
+
+	class BookingController {
+		+createBooking(req,res)
+		+getBookingByBookingId(req,res)
+		+getUserBikeBooking(req,res)
+	}
+
+	class AdminController {
+		+addBike(req,res)
+		+updateBike(req,res)
+		+deleteBike(req,res)
+		+getAllBookings(req,res)
+		+updateBookingTrackingStatus(req,res)
+		+getSalesSummary(req,res)
+		+getYearlySalesDetails(req,res)
+	}
+
+	Bike "1" *-- "0..*" YearlySale : has
+	Booking "1" *-- "1" BookingUser : embeds
+	Booking "1" *-- "1" BookingBike : embeds
+	Booking "1" *-- "0..*" BookingStatusHistory : tracks
+	AuthController ..> User : uses
+	BookingController ..> Booking : uses
+	AdminController ..> Bike : manages
+	AdminController ..> Booking : updates
+```
+
+### 2. Use Case Diagram
+
+```mermaid
+flowchart TB
+	User((User))
+	Admin((Admin))
+
+	subgraph ShowroomSystem[Showroom Management System]
+		UC1([Register])
+		UC2([Login])
+		UC3([View Bike Catalog])
+		UC4([View Bike Details])
+		UC5([Create Booking])
+		UC6([Track Booking Status])
+		UC7([Manage Bikes])
+		UC8([View All Bookings])
+		UC9([Update Tracking Status])
+		UC10([Record Delivery and Sale])
+		UC11([View Sales Summary])
+	end
+
+	User --> UC1
+	User --> UC2
+	User --> UC3
+	User --> UC4
+	User --> UC5
+	User --> UC6
+
+	Admin --> UC7
+	Admin --> UC8
+	Admin --> UC9
+	Admin --> UC11
+
+	UC5 -. include .-> UC2
+	UC9 -. include .-> UC10
+	UC10 -. include .-> UC11
+```
+
+### 3. Sequence Diagram
+
+```mermaid
+sequenceDiagram
+	autonumber
+	actor U as User
+	participant FE as Frontend (React)
+	participant API as Backend API (Express)
+	participant BK as BookingController
+	participant AD as AdminController
+	participant DB as MongoDB
+
+	U->>FE: Login(email,password)
+	FE->>API: POST /api/v1/auth/login
+	API->>DB: Find user and verify password
+	DB-->>API: User document
+	API-->>FE: Access token + user data
+
+	U->>FE: Submit booking(user,bike)
+	FE->>API: POST /api/v1/bookings
+	API->>BK: createBooking()
+	BK->>DB: Check duplicate active booking
+	DB-->>BK: Not found
+	BK->>DB: Insert booking with statusHistory=[confirmed]
+	DB-->>BK: Booking created
+	BK-->>FE: Booking success with bookingId
+
+	actor A as Admin
+	A->>FE: Update booking tracking to delivered
+	FE->>API: PATCH /api/v1/admin/bookings/:bookingId/tracking
+	API->>AD: updateBookingTrackingStatus()
+	AD->>DB: Fetch booking and bike
+	DB-->>AD: Booking + Bike
+	AD->>DB: Update bike stock and sales
+	AD->>DB: Update booking statusHistory and deliveredAt
+	DB-->>AD: Updated records
+	AD-->>FE: Tracking update success
+	FE-->>A: Show delivered status and updated summary
+```
+
+### 4. Activity Diagram
+
+```mermaid
+flowchart TD
+	S([Start]) --> A[User opens application]
+	A --> B{Authenticated?}
+	B -- No --> C[Register or Login]
+	C --> D[Authentication success]
+	B -- Yes --> E[Load bike catalog]
+	D --> E
+	E --> F[Select bike and view details]
+	F --> G{Already booked by same user?}
+	G -- Yes --> H[Show existing booking info]
+	G -- No --> I[Create booking with confirmed status]
+	I --> J[Add statusHistory entry]
+	J --> K[Admin reviews booking queue]
+	K --> L{Update stage}
+	L -- confirmed/reaching-showroom --> M[Append tracking history]
+	M --> K
+	L -- delivered --> N[Validate bike stock]
+	N --> O[Reduce stock and record sale]
+	O --> P[Mark booking delivered]
+	P --> Q[Update yearly and total sales]
+	Q --> R[Display final booking state]
+	H --> R
+	R --> T([End])
+```
+
 ## Data Model
 
 The backend uses MongoDB collections that behave like tables in a relational system. The main collections are users, bikes, and bookings.
