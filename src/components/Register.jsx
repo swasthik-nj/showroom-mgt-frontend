@@ -54,6 +54,7 @@ export default function Register() {
         localStorage.setItem(AUTH_USER_KEY, JSON.stringify(registeredUser))
         sessionStorage.removeItem(AUTH_USER_KEY)
       }
+      console.log(response);
 
       toast.success(response?.data?.message || 'Registration successful')
       setFormData({

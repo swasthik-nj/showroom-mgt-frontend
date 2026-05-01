@@ -341,12 +341,12 @@ export default function SingleBike() {
 									>
 										{testRideBooking ? '🏍 Test Ride Booked — View QR' : 'Book Test Ride'}
 									</button>
-									<button className='w-full rounded-lg border border-gray-300 px-3 py-2 text-left text-sm hover:bg-gray-50'>
+									{/* <button className='w-full rounded-lg border border-gray-300 px-3 py-2 text-left text-sm hover:bg-gray-50'>
 										View Deals
 									</button>
 									<button className='w-full rounded-lg border border-gray-300 px-3 py-2 text-left text-sm hover:bg-gray-50'>
 										Download Brochure
-									</button>
+									</button> */}
 								</div>
 							</div>
 						</aside>

@@ -38,7 +38,8 @@ export default function Login() {
 			const response = await axios.post(`${API_BASE_URL}/auth/login`, payload, {
 				withCredentials: true,
 			})
-
+			console.log(response);
+			
 			const loggedInUser = response?.data?.data?.user
 			if (loggedInUser) {
 				const serializedUser = JSON.stringify(loggedInUser)
