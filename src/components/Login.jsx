@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { Link, useNavigate } from 'react-router-dom'
+import { API_BASE_URL } from '../utils/api-base-url'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 const AUTH_USER_KEY = 'authUser'
 
 export default function Login() {

@@ -4,8 +4,8 @@ import toast from 'react-hot-toast'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { popularBikes } from '../data/data.js'
 import { QRCodeSVG } from 'qrcode.react'
+import { API_BASE_URL } from '../utils/api-base-url'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 const AUTH_USER_KEY = 'authUser'
 
 export default function SingleBike() {

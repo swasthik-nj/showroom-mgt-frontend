@@ -2,8 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL 
+import { API_BASE_URL } from '../utils/api-base-url'
 
 const BOOKING_TRACKING_STAGES = [
   {
