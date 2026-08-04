@@ -1,6 +1,7 @@
 const normalizeBaseUrl = (value) => {
 	if (typeof value === 'string' && value.trim()) {
-		return value.trim().replace(/\/$/, '')
+		const trimmedValue = value.trim().replace(/\/$/, '')
+		return trimmedValue.endsWith('/api/v1') ? trimmedValue : `${trimmedValue}/api/v1`
 	}
 
 	if (typeof window !== 'undefined' && window.location?.origin) {
